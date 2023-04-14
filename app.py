@@ -21,6 +21,7 @@ print(inspector.get_table_names())
 print(Base.classes.keys())
 #Save references to tables
 AnnualWinter = Base.classes.Weather
+DailyWinter = Base.classes.DailyWeather
 
 
 
@@ -35,30 +36,31 @@ def Home():
     return(
         f"Available API Routes:</br>"
         f"/api/v1.0/AnnualizedWeather</br>"
+        f"/api/v1.0/DailyWeather"
     )
 
-@app.route("/api/v1.0/AnnualizedWeather")
+@app.route("/api/v1.0/DailyWeather")
 @cross_origin(supports_credentials=True)  # to prevent CORS errors
-def Winter():
+def Daily():
     #create session
     session = Session(engine)    
     #query the data
-    data = session.query(AnnualWinter.Season,AnnualWinter.AvgMaxTemp,AnnualWinter.AvgMinTemp,\
-            AnnualWinter.TotalPrecip,AnnualWinter.TotalSnowfall,AnnualWinter.Total_Days_6in_Base,\
-            AnnualWinter.MaxRolling5Year,AnnualWinter.MinRolling5Year).all()
+    dailydata = session.query(DailyWinter.Date,DailyWinter.MaxTemp,DailyWinter.MinTemp,DailyWinter.Precipitation,\
+                         DailyWinter.Snowfall,DailyWinter.SnowDepth).all()
     session.close()
     #Create empy list, then a for loop with an empty dict.  Append data to dictionary
-    winter_data =[]
-    for Season,AvgMaxTemp,AvgMinTemp,TotalPrecip,TotalSnowfall,Total_Days_6in_Base,MaxRolling5Year,MinRolling5Year in data:
-        winter_dict = {}
-        winter_dict['Season'] = Season
-        winter_dict['Avg Max Temp'] = float(AvgMaxTemp)
-        winter_dict['Avg Mix Temp'] = float(AvgMinTemp)
-        winter_dict['Total Precipitation'] = float(TotalPrecip)
-        winter_dict['TotalSnowfall'] = float(TotalSnowfall)
-        winter_dict['# of Days with 6 inch snowcover'] = int(Total_Days_6in_Base)
-        winter_data.append(winter_dict)
-    return jsonify(winter_data)
+    daily_data =[]
+    for Date,MaxTemp,MinTemp,Precipitation,Snowfall,SnowDepth in dailydata:
+        daily_dict = {}
+        daily_dict['Date'] = Date
+        daily_dict['Max Temp'] = int(MaxTemp)
+        daily_dict['Min Temp'] = int(MinTemp)
+        daily_dict['Precipitation'] = float(Precipitation)
+        daily_dict['Snowfall'] = float(Snowfall)
+        daily_dict['Snow Depth'] = float(SnowDepth)
+        daily_data.append(daily_dict)
+    return jsonify(daily_data)
+
 
     
 if __name__ == '__main__':
