@@ -55,11 +55,11 @@ def Winter():
     for Season,AvgMaxTemp,AvgMinTemp,TotalPrecip,TotalSnowfall,Total_Days_6in_Base,MaxRolling5Year,MinRolling5Year in data:
         winter_dict = {}
         winter_dict['Season'] = Season
-        winter_dict['Avg Max Temp'] = float(AvgMaxTemp)
-        winter_dict['Avg Mix Temp'] = float(AvgMinTemp)
-        winter_dict['Total Precipitation'] = float(TotalPrecip)
+        winter_dict['AvgMaxTemp'] = float(AvgMaxTemp)
+        winter_dict['AvgMinTemp'] = float(AvgMinTemp)
+        winter_dict['TotalPrecipitation'] = float(TotalPrecip)
         winter_dict['TotalSnowfall'] = float(TotalSnowfall)
-        winter_dict['# of Days with 6 inch snowcover'] = int(Total_Days_6in_Base)
+        winter_dict['DaysWithSnowCover_6'] = int(Total_Days_6in_Base)
         winter_data.append(winter_dict)
     return jsonify(winter_data)
 

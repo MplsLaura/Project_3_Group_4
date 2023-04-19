@@ -177,5 +177,5 @@ d3.json(link).then(function(data) {
         
     }
     chartDiv = document.getElementById('layout')
-    Plotly.newPlot(chartDiv, data, layout);
+    Plotly.newPlot('chartDiv', data, layout);
   });

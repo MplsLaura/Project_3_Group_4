@@ -1,26 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <title>SnowCover</title>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js" charset="utf-8"></script>
-    <!-- Our CSS -->
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <!-- D3 JavaScript -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dropdown Events</title>
     <script src="https://d3js.org/d3.v5.min.js"></script>
-    <!-- Our JavaScript -->
-    <script type="text/javascript" src="js/logic.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <!-- stylesheet from bellybutton hw -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> 
 </head>
-
 <body>
+    <div class="row">
+        <div class="col-md-12 jumbotron text-center">
+          <h1>Minnesota Winter Climate (1900-2023)</h1>
+          <p></p>
+        </div>
+      </div>
 
-  <div id="layout" style="width:1400px;height:900px;"></div>
-  
+    <p></p>
+    <select id="selDataset">
+        <option value="AvgMaxTemp">Average Max Temperature</option>
+        <option value="AvgMinTemp">Average Min Temperature</option>
+    </select>
 
+    <div id="line"></div>
+    <div id="bar"></div>
+    <div id="chartDiv"></div>
+    <p>Data Sources:<br />
+        <ul>
+            <li>
+                <a href="https://www.dnr.state.mn.us/climate/twin_cities/listings.html">Twin Cities Historical Climate Data</a>
+            </li>
+            </ul>
+    </p>
+    <script src="js/plots.js"></script>
+    <script type="text/javascript" src="js/logic.js"></script>
 </body>
-
 </html>
