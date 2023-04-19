@@ -51,34 +51,7 @@ for (var j=0;j<data.length;j++) {
   ;}
  
 
-}
-
-var trace1 = {
-  x: ['1900-1920', '1920-1940','1940-1960','1960-1980','1980-2000','2000-2020'],
-  y: [first, second, third,fourth,fifth,sixth],
-  name: '6+ inches Snow',
-  type: 'bar'
 };
-
-var trace2 = {
-  x: ['1900-1920', '1920-1940','1940-1960','1960-1980','1980-2000','2000-2020'],
-  y: [1805-first, 1805-second, 1805-third,1805-fourth,1805-fifth,1805-sixth],
-  name: '<6 inch Snow',
-  type: 'bar'
-};
-
-var data2 = [trace1,trace2];
-
-var layout2 = {barmode: 'stack',
-    title: 'Snow Base over Time',
-    xaxis: {
-      title: 'Winter Seasons (Dec-Feb) 1900-2020',
-    },
-    yaxis: {
-      title: 'Proportion of Winter with Snow Cover',
-    }};
-
-Plotly.newPlot('bar', data2, layout2);
 
 
 // Display the default plot
@@ -135,5 +108,118 @@ function updatePlotly(newdata) {
 }
 
 init();
+
+// Chart.js plot
+
+let firstPlusPerc = (Math.round(first / 1805 * 100))
+let secondPlusPerc = (Math.round(second / 1805 * 100))
+let thirdPlusPerc = (Math.round(third / 1805 * 100))
+let fourthPlusPerc = (Math.round(fourth / 1805 * 100))
+let fifthPlusPerc = (Math.round(fifth / 1805 * 100))
+let sixthPlusPerc = (Math.round(sixth / 1805 * 100))
+
+let firstMinusPerc = (Math.round((1805-first) / 1805 * 100))
+let secondMinusPerc = (Math.round((1805-second) / 1805 * 100))
+let thirdMinusPerc = (Math.round((1805-third) / 1805 * 100))
+let fourthMinusPerc = (Math.round((1805-fourth) / 1805 * 100))
+let fifthMinusPerc = (Math.round((1805-fifth) / 1805 * 100))
+let sixthMinusPerc = (Math.round((1805-sixth) / 1805 * 100))
+
+let sixPlusData = [firstPlusPerc + '%', secondPlusPerc + '%', thirdPlusPerc + '%', fourthPlusPerc + '%', fifthPlusPerc + '%', sixthPlusPerc + '%']
+let sixMinusData = [firstMinusPerc + '%', secondMinusPerc + '%', thirdMinusPerc + '%', fourthMinusPerc + '%', fifthMinusPerc + '%', sixthMinusPerc + '%']
+
+console.log(sixPlusData);
+console.log(sixMinusData);
+
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+  type: "pie",
+  data: {
+    labels: [
+      "1900-1920 % > 6in",
+      "1900-1920 % < 6in",
+      "1920-1940 % > 6in",
+      "1920-1940 % < 6in",
+      "1940-1960 % > 6in",
+      "1940-1960 % < 6in",
+      "1960-1980 % > 6in",
+      "1960-1980 % < 6in",
+      "1980-2000 % > 6in",
+      "1980-2000 % < 6in",
+      "2000-2020 % > 6in",
+      "2000-2020 % < 6in",
+    ],
+    datasets: [
+      { backgroundColor: ["#AAA", "#777"], data: [firstPlusPerc, firstMinusPerc] },
+      {
+        backgroundColor: ["hsl(0, 100%, 60%)", "hsl(0, 100%, 35%)"],
+        data: [secondPlusPerc, secondMinusPerc]
+      },
+      {
+        backgroundColor: ["hsl(100, 100%, 60%)", "hsl(100, 100%, 35%)"],
+        data: [thirdPlusPerc, thirdMinusPerc]
+      },
+      {
+        backgroundColor: ["hsl(180, 100%, 60%)", "hsl(180, 100%, 35%)"],
+        data: [fourthPlusPerc, fourthMinusPerc]
+      },
+      {
+        backgroundColor: ["hsl(160, 100%, 60%)", "hsl(160, 100%, 35%)"],
+        data: [fifthPlusPerc, fifthMinusPerc]
+      },
+      {
+        backgroundColor: ["hsl(200, 100%, 60%)", "hsl(200, 100%, 35%)"],
+        data: [sixthPlusPerc, sixthMinusPerc]
+      }
+    ]
+  },
+  options: {
+    legend: {
+      labels: {
+        generateLabels: function(context) {
+          // Get the default label list
+          var original = Chart.defaults.pie.legend.labels.generateLabels;
+          var labels = original.call(this, context);
+
+          // Build an array of colors used in the datasets of the chart
+          var datasetColors = context.chart.data.datasets.map(function(e) {
+            return e.backgroundColor;
+          });
+          datasetColors = datasetColors.flat();
+
+          // Modify the color and hide state of each label
+          labels.forEach(label => {
+            // There are twice as many labels as there are datasets. This converts the label index into the corresponding dataset index
+            label.datasetIndex = (label.index - label.index % 2) / 2;
+
+            // The hidden state must match the dataset's hidden state
+            label.hidden = !context.chart.isDatasetVisible(label.datasetIndex);
+
+            // Change the color to match the dataset
+            label.fillStyle = datasetColors[label.index];
+          });
+
+          return labels;
+        }
+      },
+      onClick: function(mouseEvent, legendItem) {
+        // toggle the visibility of the dataset from what it currently is
+        this.chart.getDatasetMeta(
+          legendItem.datasetIndex
+        ).hidden = this.chart.isDatasetVisible(legendItem.datasetIndex);
+        this.chart.update();
+      }
+    },
+    tooltips: {
+      callbacks: {
+        label: function(tooltipItem, data) {
+          var labelIndex = (tooltipItem.datasetIndex * 2) + tooltipItem.index;
+          return data.labels[labelIndex] + ": "+ data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+        }
+      }
+    }
+  }
+});
+
 
 });
